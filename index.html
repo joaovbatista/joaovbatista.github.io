@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Planejador de Evoluções PXG</title>
+  <title>Planner de Evoluções PXG</title>
   <style>
     :root{
-      --bg:#0f1724;
+      --bg:#071021;
       --card:#0b1220;
       --accent:#ffcc00;
-      --text:#e6eef8;
       --muted:#9fb0c8;
-      --danger:#ff6b6b;
+      --text:#e6eef8;
       --radius:10px;
     }
     *{box-sizing:border-box}
@@ -23,10 +22,10 @@
       padding:18px;
       -webkit-font-smoothing:antialiased;
     }
+    .container{max-width:1100px;margin:0 auto}
     header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
     header img{width:36px;height:36px}
     h1{font-size:18px;margin:0}
-    .container{max-width:980px;margin:0 auto}
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
       border-radius:var(--radius);
@@ -35,10 +34,9 @@
       margin-bottom:14px;
     }
 
-    /* Form */
     .form-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .form-row label{font-size:13px;color:var(--muted);min-width:120px}
-    .form-row input[type="text"], .form-row input[type="number"], .form-row select{
+    input[type="text"], input[type="number"], textarea, select{
       padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);
       background:rgba(255,255,255,0.02);color:var(--text);min-width:160px;
     }
@@ -48,27 +46,25 @@
       cursor:pointer;font-weight:600;
     }
     button.ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.06)}
-    button.danger{background:var(--danger);color:#fff}
+    .small{font-size:13px;color:var(--muted)}
+    .readonly-box{padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);min-height:38px;color:var(--text);display:flex;align-items:center;justify-content:center}
 
-    /* List */
-    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-    .search{flex:1;min-width:160px}
-    .plan-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-    .plan{
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
-      padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);
-    }
-    .plan h3{margin:0 0 6px 0;font-size:15px}
-    .meta{font-size:13px;color:var(--muted);margin-bottom:8px}
-    .plan .row{display:flex;justify-content:space-between;gap:8px;align-items:center}
-    .small{font-size:12px;color:var(--muted)}
+    .planners{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+    .planner-card{padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+    .pokemon-list{margin-top:8px}
+    .pokemon-item{padding:8px;border-radius:6px;background:rgba(255,255,255,0.01);margin-bottom:8px;border:1px solid rgba(255,255,255,0.02);display:flex;gap:10px;align-items:center}
+    .note{font-size:12px;color:var(--muted);margin-top:6px}
 
-    /* Responsive tweaks */
-    @media (max-width:600px){
-      .form-row{flex-direction:column;align-items:stretch}
-      .form-row label{min-width:0}
+    #plannerEditorWrapper{display:none}
+    #plannerEditorInner{display:flex;gap:18px;align-items:flex-start}
+    #editorForm{flex:1;min-width:420px}
+    aside.preview{width:320px;min-width:260px}
+
+    @media (max-width:900px){
+      #plannerEditorInner{flex-direction:column}
+      aside.preview{width:100%}
+      #editorForm{min-width:0}
       button{width:100%}
-      .controls{flex-direction:column;align-items:stretch}
     }
   </style>
 </head>
@@ -79,195 +75,746 @@
       <h1>Planejador de Evoluções PXG</h1>
     </header>
 
-    <section class="card" aria-label="Adicionar plano">
-      <div class="form-row">
-        <label for="pokeName">Nome do Pokémon</label>
-        <input id="pokeName" type="text" placeholder="Ex: Pikachu">
-        <label for="current">Estágio atual</label>
-        <input id="current" type="text" placeholder="Ex: 1">
-        <label for="target">Estágio alvo</label>
-        <input id="target" type="text" placeholder="Ex: 2">
-      </div>
+    <section class="card" aria-label="Criar planner">
+      <label for="plannerName">Nome do Planner</label>
+      <input id="plannerName" type="text" placeholder="Ex: Evoluções Semanais">
 
       <div class="form-row" style="margin-top:8px">
-        <label for="cost">Custo (itens/moedas)</label>
-        <input id="cost" type="number" min="0" placeholder="Ex: 50">
-        <label for="priority">Prioridade</label>
-        <select id="priority">
-          <option value="normal">Normal</option>
-          <option value="high">Alta</option>
-          <option value="low">Baixa</option>
-        </select>
-        <label for="note">Nota</label>
-        <input id="note" type="text" placeholder="Observações">
+        <div style="flex:1;min-width:160px">
+          <label for="plannerGoal">Objetivo do Planner</label>
+          <input id="plannerGoal" type="text" placeholder="Ex: Priorizar pokémons para raid">
+        </div>
+        <div style="flex:1;min-width:160px">
+          <label for="plannerDeadline">Data alvo (opcional)</label>
+          <input id="plannerDeadline" type="text" placeholder="Ex: 2026-07-31">
+        </div>
       </div>
 
       <div class="form-actions">
-        <button id="addBtn">Adicionar Plano</button>
-        <button id="clearBtn" class="ghost">Limpar Campos</button>
+        <button id="createPlannerBtn">Criar Planner</button>
+        <button id="clearPlannerBtn" class="ghost">Limpar</button>
       </div>
+      <div class="note">Cada planner pode conter no máximo <strong>6 pokémons</strong>. Depois de criar, clique em "Abrir" para adicionar pokémons.</div>
     </section>
 
     <section class="card">
-      <div class="controls">
-        <input id="search" class="search" type="text" placeholder="Buscar por nome ou nota">
-        <select id="filterPriority">
-          <option value="">Filtrar prioridade</option>
-          <option value="high">Alta</option>
-          <option value="normal">Normal</option>
-          <option value="low">Baixa</option>
-        </select>
-        <div class="small">Progresso: <span id="progress">0/0</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="small">Seus Planners</div>
+        <div class="small" id="summary">0 planners</div>
       </div>
+      <div id="planners" class="planners" style="margin-top:10px"></div>
+    </section>
 
-      <div id="list" class="plan-list" aria-live="polite"></div>
+    <section id="plannerEditorWrapper" class="card" aria-label="Editor do planner">
+      <div id="plannerEditorInner">
+        <div id="editorForm">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h2 id="editorTitle" style="margin:0;font-size:18px"></h2>
+              <div class="small" id="editorGoal"></div>
+            </div>
+            <div>
+              <button id="closeEditor" class="ghost">Fechar</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label for="pokeName">Nome do Pokémon</label>
+            <input id="pokeName" type="text" placeholder="Ex: Garchomp">
+            <div class="small" style="margin-top:6px">Digite "shiny" no nome para buscar a versão shiny (se disponível).</div>
+
+            <div class="form-row" style="margin-top:8px">
+              <div style="flex:1;min-width:140px">
+                <label for="pokeTier">Tier (número)</label>
+                <input id="pokeTier" type="number" min="2" placeholder="Ex: 2">
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top:8px">
+              <div style="flex:1;min-width:140px">
+                <label for="pokeBoostCurrent">Boost atual</label>
+                <input id="pokeBoostCurrent" type="number" min="0" placeholder="Ex: 0">
+              </div>
+              <div style="flex:1;min-width:140px">
+                <label for="pokeBoostTarget">Boost desejado</label>
+                <input id="pokeBoostTarget" type="number" min="0" placeholder="Ex: 3">
+              </div>
+              <div style="flex:1;min-width:140px">
+                <label for="priceStone">Valor da pedra (unitário)</label>
+                <input id="priceStone" type="number" min="0" placeholder="Ex: 8">
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top:8px;align-items:center">
+              <div style="width:120px;min-width:120px">
+                <label for="pokeQtdStones">Qtd Stones</label>
+                <div id="pokeQtdStones" class="readonly-box">—</div>
+              </div>
+
+              <div style="flex:1;min-width:160px">
+                <label for="pokeEstimatedCost">Valor médio estimado</label>
+                <div id="pokeEstimatedCost" class="readonly-box">—</div>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top:8px">
+              <div style="flex:1;min-width:140px">
+                <label for="heldX">Held X desejado</label>
+                <input id="heldX" type="text" placeholder="Ex: HeldXName">
+              </div>
+              <div style="flex:1;min-width:140px">
+                <label for="heldXVal">Valor do Held X</label>
+                <input id="heldXVal" type="number" min="0" placeholder="Ex: 20">
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top:8px">
+              <div style="flex:1;min-width:140px">
+                <label for="heldY">Held Y desejado</label>
+                <input id="heldY" type="text" placeholder="Ex: HeldYName">
+              </div>
+              <div style="flex:1;min-width:140px">
+                <label for="heldYVal">Valor do Held Y</label>
+                <input id="heldYVal" type="number" min="0" placeholder="Ex: 15">
+              </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:10px">
+              <button id="addPokemonBtn">Adicionar Pokémon</button>
+              <button id="clearPokemonBtn" class="ghost">Limpar</button>
+            </div>
+
+            <div class="note" id="limitNote" style="margin-top:8px"></div>
+
+            <div class="pokemon-list" id="pokemonList" style="margin-top:10px"></div>
+
+            <div style="margin-top:12px" class="form-actions">
+              <button id="savePlannerBtn">Salvar Planner</button>
+              <button id="deletePlannerBtn" class="ghost">Excluir Planner</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="preview">
+          <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;text-align:center">
+            <div id="previewLoading" class="small" style="display:none">Buscando imagem...</div>
+            <img id="pokePreviewImg" src="" alt="Imagem do Pokémon" style="width:100%;height:260px;object-fit:contain;border-radius:6px;background:#071021">
+            <div style="display:flex;gap:8px;margin-top:8px;justify-content:center">
+              <div style="width:48%;text-align:center">
+                <div class="small">Held X</div>
+                <div id="heldXPreview" style="height:56px;display:flex;align-items:center;justify-content:center;background:#07182a;border-radius:6px">—</div>
+              </div>
+              <div style="width:48%;text-align:center">
+                <div class="small">Held Y</div>
+                <div id="heldYPreview" style="height:56px;display:flex;align-items:center;justify-content:center;background:#07182a;border-radius:6px">—</div>
+              </div>
+            </div>
+            <div class="small" style="margin-top:8px">A imagem é buscada pela PokéAPI (variações: Shiny, Alolan, Mega).</div>
+          </div>
+        </aside>
+      </div>
     </section>
   </div>
 
   <script>
-    // Estrutura de dados: {id, name, current, target, cost, priority, note, done}
-    const STORAGE_KEY = 'pxg_plans_v1';
-    const addBtn = document.getElementById('addBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const listEl = document.getElementById('list');
-    const searchEl = document.getElementById('search');
-    const filterPriority = document.getElementById('filterPriority');
-    const progressEl = document.getElementById('progress');
-
+  // Wrap everything in DOMContentLoaded to avoid race conditions
+  document.addEventListener('DOMContentLoaded', function () {
+    /* =========================
+       Storage and core planner
+       ========================= */
+    const STORAGE_KEY = 'pxg_planners_v1';
     function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+    function loadPlanners(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }catch(e){ return []; } }
+    function savePlanners(pls){ localStorage.setItem(STORAGE_KEY, JSON.stringify(pls)); }
 
-    function loadPlans(){
-      try{
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      }catch(e){ return []; }
-    }
-    function savePlans(plans){ localStorage.setItem(STORAGE_KEY, JSON.stringify(plans)); }
+    let currentEditingId = null;
 
-    function getFormData(){
-      return {
-        id: uid(),
-        name: document.getElementById('pokeName').value.trim(),
-        current: document.getElementById('current').value.trim(),
-        target: document.getElementById('target').value.trim(),
-        cost: Number(document.getElementById('cost').value) || 0,
-        priority: document.getElementById('priority').value,
-        note: document.getElementById('note').value.trim(),
-        done: false
+    const createPlannerBtn = document.getElementById('createPlannerBtn');
+    const clearPlannerBtn = document.getElementById('clearPlannerBtn');
+    const plannersEl = document.getElementById('planners');
+    const summaryEl = document.getElementById('summary');
+
+    // Placeholders (data URLs)
+    const LOADING_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <rect width="100%" height="100%" fill="#071021"/>
+  <g transform="translate(300,200)">
+    <circle cx="-60" cy="0" r="18" fill="#ffcc00">
+      <animate attributeName="r" values="6;18;6" dur="1.2s" repeatCount="indefinite" begin="0s"/>
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite" begin="0s"/>
+    </circle>
+    <circle cx="0" cy="0" r="18" fill="#9fb0c8">
+      <animate attributeName="r" values="6;18;6" dur="1.2s" repeatCount="indefinite" begin="0.2s"/>
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite" begin="0.2s"/>
+    </circle>
+    <circle cx="60" cy="0" r="18" fill="#e6eef8">
+      <animate attributeName="r" values="6;18;6" dur="1.2s" repeatCount="indefinite" begin="0.4s"/>
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite" begin="0.4s"/>
+    </circle>
+    <text x="-120" y="70" fill="#9fb0c8" font-size="14" font-family="Arial">Pesquisando Pokémon...</text>
+  </g>
+</svg>
+`);
+
+    const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <rect width="100%" height="100%" fill="#071021"/>
+  <g transform="translate(300,200)">
+    <rect x="-120" y="-90" width="240" height="180" rx="12" fill="#07182a" stroke="#1f2b3a" />
+    <text x="0" y="-10" fill="#9fb0c8" font-size="18" font-family="Arial" text-anchor="middle">Nenhum Pokémon</text>
+    <text x="0" y="20" fill="#6f8aa3" font-size="12" font-family="Arial" text-anchor="middle">Imagem indisponível</text>
+  </g>
+</svg>
+`);
+
+    const POKEBALL_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="600" height="400">
+  <rect width="100%" height="100%" fill="#071021"/>
+  <g transform="translate(50,50) scale(0.9)">
+    <circle r="40" fill="#fff" stroke="#000" stroke-width="3"/>
+    <path d="M-40 0 H40" stroke="#000" stroke-width="6" fill="none"/>
+    <path d="M-40 -40 A40 40 0 0 1 40 -40 L40 0 L-40 0 Z" fill="#e53935" stroke="none"/>
+    <circle r="12" fill="#fff" stroke="#000" stroke-width="3" />
+    <circle r="6" fill="#f0f0f0" stroke="#000" stroke-width="1.2" />
+  </g>
+</svg>
+`);
+
+    function attachImageFallback(imgEl){
+      if(!imgEl) return;
+      imgEl.onerror = function(){
+        if(this.dataset.fallbackApplied) return;
+        this.dataset.fallbackApplied = '1';
+        this.src = PLACEHOLDER_IMG;
       };
     }
 
-    function clearForm(){
-      document.getElementById('pokeName').value='';
-      document.getElementById('current').value='';
-      document.getElementById('target').value='';
-      document.getElementById('cost').value='';
-      document.getElementById('priority').value='normal';
-      document.getElementById('note').value='';
+    function showPokeballPreview(){
+      const previewImg = document.getElementById('pokePreviewImg');
+      if(!previewImg) return;
+      previewImg.dataset.fallbackApplied = '';
+      previewImg.src = POKEBALL_IMG;
+      attachImageFallback(previewImg);
     }
 
-    function render(){
-      const q = searchEl.value.trim().toLowerCase();
-      const pr = filterPriority.value;
-      const plans = loadPlans().filter(p=>{
-        if(pr && p.priority !== pr) return false;
-        if(!q) return true;
-        return p.name.toLowerCase().includes(q) || (p.note && p.note.toLowerCase().includes(q));
-      });
+    /* =========================
+       Image fetch helpers
+       ========================= */
+    function normalizeName(s){
+      return String(s || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/♀/g, 'f').replace(/♂/g, 'm')
+        .replace(/[^a-z0-9\s\-]/gi,'')
+        .trim()
+        .toLowerCase();
+    }
 
-      listEl.innerHTML = '';
-      if(plans.length === 0){
-        listEl.innerHTML = '<div class="small">Nenhum plano encontrado</div>';
-      }else{
-        plans.forEach(p=>{
-          const div = document.createElement('div');
-          div.className = 'plan';
-          div.innerHTML = `
-            <h3>${escapeHtml(p.name || '(sem nome)')}</h3>
-            <div class="meta">Estágio ${escapeHtml(p.current)} → ${escapeHtml(p.target)} • Custo ${p.cost} • <strong>${p.priority}</strong></div>
-            <div class="row">
-              <div class="small">${escapeHtml(p.note || '')}</div>
-              <div style="display:flex;gap:6px">
-                <button class="ghost" data-action="toggle" data-id="${p.id}">${p.done ? 'Desfazer' : 'Concluir'}</button>
-                <button class="ghost" data-action="edit" data-id="${p.id}">Editar</button>
-                <button class="danger" data-action="delete" data-id="${p.id}">Remover</button>
-              </div>
-            </div>
-          `;
-          if(p.done){
-            div.style.opacity = '0.6';
-            div.style.textDecoration = 'line-through';
-          }
-          listEl.appendChild(div);
-        });
+    function parsePokemonInput(raw){
+      const s = normalizeName(raw);
+      const parts = s.split(/\s+/).filter(Boolean);
+      const flags = { isShiny:false, isMega:false, isAlolan:false, megaSuffix:null };
+      const remaining = [];
+      for(let i=0;i<parts.length;i++){
+        const p = parts[i];
+        if(p === 'shiny'){ flags.isShiny = true; continue; }
+        if(p === 'alolan' || p === 'alola'){ flags.isAlolan = true; continue; }
+        if(p === 'mega'){ flags.isMega = true; continue; }
+        if((p === 'x' || p === 'y') && flags.isMega){ flags.megaSuffix = p; continue; }
+        remaining.push(p);
       }
-      updateProgress();
-    }
+      const base = remaining.join('-');
+      const tries = new Set();
+      function add(v){ if(v && v.length>0) tries.add(v); }
 
-    function updateProgress(){
-      const plans = loadPlans();
-      const done = plans.filter(p=>p.done).length;
-      progressEl.textContent = `${done}/${plans.length}`;
-    }
-
-    // Event handlers
-    addBtn.addEventListener('click', ()=>{
-      const data = getFormData();
-      if(!data.name){
-        alert('Informe o nome do Pokémon.');
-        return;
+      if(flags.isAlolan){
+        add(`alolan-${base}`); add(`${base}-alolan`); add(`${base}-alola`);
       }
-      const plans = loadPlans();
-      plans.push(data);
-      savePlans(plans);
-      clearForm();
-      render();
+      if(flags.isMega){
+        if(flags.megaSuffix){
+          add(`mega-${base}-${flags.megaSuffix}`);
+          add(`${base}-mega-${flags.megaSuffix}`);
+          add(`${base}-${flags.megaSuffix}-mega`);
+          add(`${base}-${flags.megaSuffix}`);
+          add(`${base}${flags.megaSuffix}`);
+        }
+        add(`mega-${base}`); add(`${base}-mega`); add(`${base}mega`); add(`mega${base}`);
+      }
+      add(base);
+      add(`${base}-gmax`); add(`${base}-g-max`);
+      return { base, flags, tries: Array.from(tries) };
+    }
+
+    async function tryFetchFormSprite(formName, wantShiny){
+      if(!formName) return null;
+      try{
+        const url = `https://pokeapi.co/api/v2/pokemon-form/${encodeURIComponent(formName)}`;
+        const res = await fetch(url);
+        if(!res.ok) return null;
+        const data = await res.json();
+        if(data.sprites){
+          if(wantShiny && data.sprites.front_shiny) return data.sprites.front_shiny;
+          if(wantShiny && data.sprites.back_shiny) return data.sprites.back_shiny;
+          if(data.sprites.front_default) return data.sprites.front_default;
+          if(data.sprites.back_default) return data.sprites.back_default;
+          if(data.sprites.front_shiny) return data.sprites.front_shiny;
+          if(data.sprites.back_shiny) return data.sprites.back_shiny;
+        }
+        if(data.pokemon && data.pokemon.url){
+          try{
+            const res2 = await fetch(data.pokemon.url);
+            if(res2.ok){
+              const p = await res2.json();
+              if(wantShiny && p.sprites && p.sprites.front_shiny) return p.sprites.front_shiny;
+              if(wantShiny && p.sprites && p.sprites.back_shiny) return p.sprites.back_shiny;
+              const art = p.sprites && p.sprites.other && p.sprites.other['official-artwork'] && p.sprites.other['official-artwork'].front_default;
+              if(art) return art;
+              if(p.sprites && p.sprites.front_default) return p.sprites.front_default;
+              if(p.sprites && p.sprites.front_shiny) return p.sprites.front_shiny;
+            }
+          }catch(e){}
+        }
+        return null;
+      }catch(e){
+        return null;
+      }
+    }
+
+    async function fetchPokemonSpriteFromPokemonEndpoint(name, wantShiny){
+      if(!name) return null;
+      try{
+        const url = `https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(name.toLowerCase())}`;
+        const res = await fetch(url);
+        if(!res.ok) return null;
+        const data = await res.json();
+        if(wantShiny){
+          if(data.sprites && data.sprites.front_shiny) return data.sprites.front_shiny;
+          if(data.sprites && data.sprites.back_shiny) return data.sprites.back_shiny;
+        }
+        const art = data.sprites && data.sprites.other && data.sprites.other['official-artwork'] && data.sprites.other['official-artwork'].front_default;
+        if(art) return art;
+        if(data.sprites && data.sprites.front_default) return data.sprites.front_default;
+        const dw = data.sprites && data.sprites.other && data.sprites.other['dream_world'] && data.sprites.other['dream_world'].front_default;
+        if(dw) return dw;
+        if(data.sprites && data.sprites.front_shiny) return data.sprites.front_shiny;
+        return null;
+      }catch(e){
+        return null;
+      }
+    }
+
+    async function fetchPokemonImageByNameWithVariants(rawName){
+      const previewImg = document.getElementById('pokePreviewImg');
+      const loading = document.getElementById('previewLoading');
+      if(loading) loading.style.display = 'block';
+      if(previewImg){
+        previewImg.dataset.fallbackApplied = '';
+        previewImg.src = LOADING_IMG;
+        attachImageFallback(previewImg);
+      }
+
+      const parsed = parsePokemonInput(rawName);
+      const wantShiny = parsed.flags.isShiny;
+
+      for(const candidate of parsed.tries){
+        if(!candidate) continue;
+        const formSprite = await tryFetchFormSprite(candidate, wantShiny);
+        if(formSprite){
+          if(loading) loading.style.display = 'none';
+          if(previewImg){ previewImg.dataset.fallbackApplied = ''; previewImg.src = formSprite; attachImageFallback(previewImg); }
+          return formSprite;
+        }
+        const pokeSprite = await fetchPokemonSpriteFromPokemonEndpoint(candidate, wantShiny);
+        if(pokeSprite){
+          if(loading) loading.style.display = 'none';
+          if(previewImg){ previewImg.dataset.fallbackApplied = ''; previewImg.src = pokeSprite; attachImageFallback(previewImg); }
+          return pokeSprite;
+        }
+      }
+
+      if(parsed.base){
+        const final = await fetchPokemonSpriteFromPokemonEndpoint(parsed.base, wantShiny);
+        if(final){
+          if(loading) loading.style.display = 'none';
+          if(previewImg){ previewImg.dataset.fallbackApplied = ''; previewImg.src = final; attachImageFallback(previewImg); }
+          return final;
+        }
+      }
+
+      if(loading) loading.style.display = 'none';
+      if(previewImg){ previewImg.dataset.fallbackApplied = ''; previewImg.src = PLACEHOLDER_IMG; attachImageFallback(previewImg); }
+      return '';
+    }
+
+    /* =========================
+       Cálculo de stones e estimativa
+       ========================= */
+    function calculateQtdStones(boostCurrent, boostTarget, tier){
+      const current = Math.max(0, Number(boostCurrent) || 0);
+      const target = Math.max(0, Number(boostTarget) || 0);
+      const t = Math.max(1, Math.floor(Number(tier) || 1));
+      if(target <= current) return 0;
+      let total = 0;
+      for(let b = current; b <= target - 1; b++){
+        total += Math.floor(b / t) + 1;
+      }
+      return total;
+    }
+
+    function calculateEstimatedCost({ tier, boostCurrent, boostTarget, priceStone }){
+      const pStone = Number(priceStone) || 0;
+      const stones = calculateQtdStones(boostCurrent, boostTarget, tier);
+      const estimated = Math.round(stones * pStone);
+      return { estimated, details: { stones, costStones: stones * pStone, tier: Number(tier)||1, levels: Math.max(0, (Number(boostTarget)||0) - (Number(boostCurrent)||0)) } };
+    }
+
+    function updateEstimatedCostDisplay(){
+      const tier = document.getElementById('pokeTier').value.trim();
+      const boostCurrent = document.getElementById('pokeBoostCurrent').value.trim();
+      const boostTarget = document.getElementById('pokeBoostTarget').value.trim();
+      const priceStone = Number(document.getElementById('priceStone').value.trim()) || 0;
+
+      const res = calculateEstimatedCost({ tier, boostCurrent, boostTarget, priceStone });
+
+      const qEl = document.getElementById('pokeQtdStones');
+      const el = document.getElementById('pokeEstimatedCost');
+
+      if(!res || isNaN(res.estimated)){
+        if(qEl){ qEl.textContent = '—'; qEl.dataset.value = ''; }
+        if(el){ el.textContent = '—'; el.dataset.value = ''; el.dataset.details = ''; }
+      } else {
+        if(qEl){ qEl.textContent = String(res.details.stones); qEl.dataset.value = String(res.details.stones); }
+        if(el){ el.textContent = String(res.estimated); el.dataset.value = String(res.estimated); el.dataset.details = JSON.stringify(res.details); }
+      }
+    }
+
+    // Attach listeners for inputs that affect calculation
+    ['pokeTier','pokeBoostCurrent','pokeBoostTarget','priceStone'].forEach(id=>{
+      const inp = document.getElementById(id);
+      if(!inp) return;
+      inp.addEventListener('input', updateEstimatedCostDisplay);
     });
 
-    clearBtn.addEventListener('click', clearForm);
-    searchEl.addEventListener('input', render);
-    filterPriority.addEventListener('change', render);
+    /* =========================
+       Editor interactions and UI
+       ========================= */
+    function renderPlanners(){
+      const planners = loadPlanners();
+      plannersEl.innerHTML = '';
+      summaryEl.textContent = `${planners.length} planner(s)`;
+      if(planners.length === 0){
+        plannersEl.innerHTML = '<div class="small">Nenhum planner criado</div>';
+        return;
+      }
+      planners.forEach(p=>{
+        const card = document.createElement('div');
+        card.className = 'planner-card';
+        card.innerHTML = `
+          <strong>${escapeHtml(p.name)}</strong>
+          <div class="small">${escapeHtml(p.goal || '')}</div>
+          <div class="small">Pokémons: ${p.pokemons.length}/6</div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button data-action="open" data-id="${p.id}">Abrir</button>
+            <button class="ghost" data-action="duplicate" data-id="${p.id}">Duplicar</button>
+            <button class="ghost" data-action="export" data-id="${p.id}">Exportar JSON</button>
+            <button class="ghost" data-action="clear" data-id="${p.id}">Limpar pokémons</button>
+          </div>
+        `;
+        plannersEl.appendChild(card);
+      });
+    }
 
-    listEl.addEventListener('click', (e)=>{
+    function openPlanner(planner){
+      currentEditingId = planner.id;
+      editorTitle.textContent = planner.name;
+      editorGoal.textContent = planner.goal ? `Objetivo: ${planner.goal}` : '';
+      plannerEditorWrapper.style.display = 'block';
+      loadEditorData(planner);
+    }
+
+    function loadEditorData(planner){
+      // reset form
+      document.getElementById('pokeName').value='';
+      document.getElementById('pokeTier').value='';
+      document.getElementById('pokeBoostCurrent').value='';
+      document.getElementById('pokeBoostTarget').value='';
+      document.getElementById('priceStone').value='';
+      document.getElementById('pokeQtdStones').textContent = '—';
+      document.getElementById('pokeQtdStones').dataset.value = '';
+      document.getElementById('pokeEstimatedCost').textContent = '—';
+      document.getElementById('pokeEstimatedCost').dataset.value = '';
+      document.getElementById('pokeEstimatedCost').dataset.details = '';
+      document.getElementById('heldX').value='';
+      document.getElementById('heldXVal').value='';
+      document.getElementById('heldY').value='';
+      document.getElementById('heldYVal').value='';
+      document.getElementById('pokePreviewImg').src = '';
+      document.getElementById('heldXPreview').textContent = '—';
+      document.getElementById('heldYPreview').textContent = '—';
+      renderPokemonList(planner.pokemons);
+      updateLimitNote(planner.pokemons.length);
+      showPokeballPreview();
+      updateEstimatedCostDisplay();
+    }
+
+    function renderPokemonList(pokemons){
+      const list = document.getElementById('pokemonList');
+      list.innerHTML = '';
+      if(!pokemons || pokemons.length === 0){
+        list.innerHTML = '<div class="small">Nenhum pokémon adicionado</div>';
+        return;
+      }
+      pokemons.forEach(p=>{
+        const div = document.createElement('div');
+        div.className = 'pokemon-item';
+        const imgSrc = p.imageUrl || POKEBALL_IMG;
+        div.innerHTML = `
+          <img src="${imgSrc}" style="width:64px;height:64px;object-fit:contain;border-radius:6px;background:#071021" alt="">
+          <div style="flex:1">
+            <strong>${escapeHtml(p.name)}</strong>
+            <div class="small">Tier: ${escapeHtml(p.tier || '-')} • Boost: ${escapeHtml(p.boostCurrent || '-')} → ${escapeHtml(p.boostTarget || '-')}</div>
+            <div class="small">Stones: ${p.estimatedDetails && p.estimatedDetails.stones != null ? p.estimatedDetails.stones : '-'} • Valor médio: ${p.estimatedCost != null ? p.estimatedCost : '-'}</div>
+            <div class="small">HeldX: ${escapeHtml(p.heldX || '-')} (${p.heldXVal}) • HeldY: ${escapeHtml(p.heldY || '-')} (${p.heldYVal})</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button data-action="edit-poke" data-id="${p.id}">Editar</button>
+            <button class="ghost" data-action="remove-poke" data-id="${p.id}">Remover</button>
+          </div>
+        `;
+        list.appendChild(div);
+        const imgEl = div.querySelector('img');
+        attachImageFallback(imgEl);
+      });
+      updateLimitNote(pokemons.length);
+    }
+
+    function updateLimitNote(count){
+      const el = document.getElementById('limitNote');
+      el.textContent = `Pokémons neste planner: ${count}/6`;
+      if(count >= 6) el.textContent += ' — limite atingido';
+    }
+
+    function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    // Event delegation for planner actions
+    plannersEl.addEventListener('click', (e)=>{
       const btn = e.target.closest('button');
       if(!btn) return;
       const action = btn.dataset.action;
       const id = btn.dataset.id;
-      let plans = loadPlans();
-      const idx = plans.findIndex(p=>p.id===id);
+      let planners = loadPlanners();
+      const idx = planners.findIndex(x=>x.id===id);
       if(idx === -1) return;
-      if(action === 'toggle'){
-        plans[idx].done = !plans[idx].done;
-        savePlans(plans);
-        render();
-      }else if(action === 'delete'){
-        if(confirm('Remover este plano?')) {
-          plans.splice(idx,1);
-          savePlans(plans);
-          render();
+      if(action === 'open'){
+        openPlanner(planners[idx]);
+      } else if(action === 'duplicate'){
+        const copy = JSON.parse(JSON.stringify(planners[idx]));
+        copy.id = uid();
+        copy.name = copy.name + ' (cópia)';
+        planners.unshift(copy);
+        savePlanners(planners);
+        renderPlanners();
+      } else if(action === 'export'){
+        const data = JSON.stringify(planners[idx], null, 2);
+        const blob = new Blob([data], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${planners[idx].name.replace(/\s+/g,'_')}.json`; a.click();
+        URL.revokeObjectURL(url);
+      } else if(action === 'clear'){
+        if(confirm('Remover todos os pokémons deste planner?')){
+          planners[idx].pokemons = [];
+          savePlanners(planners);
+          renderPlanners();
+          if(currentEditingId === id) openPlanner(planners[idx]);
         }
-      }else if(action === 'edit'){
-        // preencher formulário para edição simples
-        const p = plans[idx];
-        document.getElementById('pokeName').value = p.name;
-        document.getElementById('current').value = p.current;
-        document.getElementById('target').value = p.target;
-        document.getElementById('cost').value = p.cost;
-        document.getElementById('priority').value = p.priority;
-        document.getElementById('note').value = p.note;
-        // remover o item antigo e esperar que o usuário clique em Adicionar para salvar como novo
-        plans.splice(idx,1);
-        savePlans(plans);
-        render();
       }
     });
 
-    // util
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+    // Planner create/clear handlers
+    createPlannerBtn.addEventListener('click', ()=>{
+      const name = document.getElementById('plannerName').value.trim();
+      const goal = document.getElementById('plannerGoal').value.trim();
+      const deadline = document.getElementById('plannerDeadline').value.trim();
+      if(!name){ alert('Informe um nome para o planner.'); return; }
+      const planners = loadPlanners();
+      const newPlanner = { id: uid(), name, goal, deadline, pokemons: [] };
+      planners.unshift(newPlanner);
+      savePlanners(planners);
+      document.getElementById('plannerName').value='';
+      document.getElementById('plannerGoal').value='';
+      document.getElementById('plannerDeadline').value='';
+      renderPlanners();
+    });
+
+    clearPlannerBtn.addEventListener('click', ()=>{
+      document.getElementById('plannerName').value='';
+      document.getElementById('plannerGoal').value='';
+      document.getElementById('plannerDeadline').value='';
+    });
+
+    // Editor buttons
+    const closeEditorBtn = document.getElementById('closeEditor');
+    closeEditorBtn.addEventListener('click', ()=>{
+      plannerEditorWrapper.style.display = 'none';
+      currentEditingId = null;
+    });
+
+    // Name input + preview behavior
+    const pokeNameInput = document.getElementById('pokeName');
+    const heldXInput = document.getElementById('heldX');
+    const heldYInput = document.getElementById('heldY');
+    const heldXPreview = document.getElementById('heldXPreview');
+    const heldYPreview = document.getElementById('heldYPreview');
+
+    let previewFetchTimer = null;
+    pokeNameInput.addEventListener('input', ()=>{
+      clearTimeout(previewFetchTimer);
+      const name = pokeNameInput.value.trim();
+      if(!name){
+        showPokeballPreview();
+        return;
+      }
+      previewFetchTimer = setTimeout(()=> {
+        fetchPokemonImageByNameWithVariants(name).then(()=>{/* no-op */});
+      }, 450);
+    });
+
+    heldXInput.addEventListener('input', ()=> {
+      heldXPreview.textContent = heldXInput.value.trim() || '—';
+    });
+    heldYInput.addEventListener('input', ()=> {
+      heldYPreview.textContent = heldYInput.value.trim() || '—';
+    });
+
+    // Add Pokémon
+    document.getElementById('addPokemonBtn').addEventListener('click', async ()=>{
+      if(!currentEditingId) return;
+      const name = document.getElementById('pokeName').value.trim();
+      if(!name){ alert('Nome do Pokémon é obrigatório.'); return; }
+
+      const imageUrl = await fetchPokemonImageByNameWithVariants(name);
+
+      const tier = document.getElementById('pokeTier').value.trim();
+      const boostCurrent = document.getElementById('pokeBoostCurrent').value.trim();
+      const boostTarget = document.getElementById('pokeBoostTarget').value.trim();
+      const priceStone = Number(document.getElementById('priceStone').value) || 0;
+      const heldX = document.getElementById('heldX').value.trim();
+      const heldXVal = Number(document.getElementById('heldXVal').value) || 0;
+      const heldY = document.getElementById('heldY').value.trim();
+      const heldYVal = Number(document.getElementById('heldYVal').value) || 0;
+
+      const res = calculateEstimatedCost({ tier, boostCurrent, boostTarget, priceStone });
+      const estimatedCost = res.estimated;
+      const estimatedDetails = res.details;
+
+      const planners = loadPlanners();
+      const pidx = planners.findIndex(p=>p.id===currentEditingId);
+      if(pidx === -1) return;
+      const planner = planners[pidx];
+      if(planner.pokemons.length >= 6){
+        alert('Limite de 6 pokémons por planner atingido.');
+        return;
+      }
+
+      const pokemonObj = {
+        id: uid(),
+        name, tier, boostCurrent, boostTarget,
+        priceStone, estimatedCost, estimatedDetails,
+        heldX, heldXVal, heldY, heldYVal,
+        imageUrl
+      };
+
+      planner.pokemons.push(pokemonObj);
+      savePlanners(planners);
+      loadEditorData(planner);
+      renderPlanners();
+    });
+
+    // Clear pokemon form
+    document.getElementById('clearPokemonBtn').addEventListener('click', clearPokemonForm);
+    function clearPokemonForm(){
+      document.getElementById('pokeName').value='';
+      document.getElementById('pokeTier').value='';
+      document.getElementById('pokeBoostCurrent').value='';
+      document.getElementById('pokeBoostTarget').value='';
+      document.getElementById('priceStone').value='';
+      document.getElementById('pokeQtdStones').textContent = '—';
+      document.getElementById('pokeQtdStones').dataset.value = '';
+      document.getElementById('pokeEstimatedCost').textContent = '—';
+      document.getElementById('pokeEstimatedCost').dataset.value = '';
+      document.getElementById('pokeEstimatedCost').dataset.details = '';
+      document.getElementById('heldX').value='';
+      document.getElementById('heldXVal').value='';
+      document.getElementById('heldY').value='';
+      document.getElementById('heldYVal').value='';
+      showPokeballPreview();
     }
 
-    // inicializa
-    render();
+    // List actions (edit/remove)
+    document.getElementById('pokemonList').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      const planners = loadPlanners();
+      const pidx = planners.findIndex(p=>p.id===currentEditingId);
+      if(pidx === -1) return;
+      const planner = planners[pidx];
+      const pkidx = planner.pokemons.findIndex(x=>x.id===id);
+      if(pkidx === -1) return;
+      if(action === 'remove-poke'){
+        if(confirm('Remover este pokémon do planner?')){
+          planner.pokemons.splice(pkidx,1);
+          savePlanners(planners);
+          renderPokemonList(planner.pokemons);
+          renderPlanners();
+        }
+      } else if(action === 'edit-poke'){
+        const pk = planner.pokemons[pkidx];
+        document.getElementById('pokeName').value = pk.name;
+        document.getElementById('pokeTier').value = pk.tier || '';
+        document.getElementById('pokeBoostCurrent').value = pk.boostCurrent || '';
+        document.getElementById('pokeBoostTarget').value = pk.boostTarget || '';
+        document.getElementById('priceStone').value = pk.priceStone || '';
+        document.getElementById('pokeQtdStones').textContent = pk.estimatedDetails && pk.estimatedDetails.stones != null ? String(pk.estimatedDetails.stones) : '—';
+        document.getElementById('pokeEstimatedCost').textContent = pk.estimatedCost != null ? String(pk.estimatedCost) : '—';
+        document.getElementById('pokeEstimatedCost').dataset.details = pk.estimatedDetails ? JSON.stringify(pk.estimatedDetails) : '';
+        document.getElementById('heldX').value = pk.heldX || '';
+        document.getElementById('heldXVal').value = pk.heldXVal || '';
+        document.getElementById('heldY').value = pk.heldY || '';
+        document.getElementById('heldYVal').value = pk.heldYVal || '';
+        document.getElementById('pokePreviewImg').src = pk.imageUrl || POKEBALL_IMG;
+        // remove from list so editing will re-add on save
+        planner.pokemons.splice(pkidx,1);
+        savePlanners(planner);
+        renderPokemonList(planner.pokemons);
+        renderPlanners();
+        updateEstimatedCostDisplay();
+      }
+    });
+
+    // Save / Delete planner
+    document.getElementById('savePlannerBtn').addEventListener('click', ()=>{
+      plannerEditorWrapper.style.display = 'none';
+      currentEditingId = null;
+      renderPlanners();
+    });
+
+    document.getElementById('deletePlannerBtn').addEventListener('click', ()=>{
+      if(!currentEditingId) return;
+      if(!confirm('Excluir este planner permanentemente?')) return;
+      let planners = loadPlanners();
+      planners = planners.filter(p=>p.id !== currentEditingId);
+      savePlanners(planners);
+      plannerEditorWrapper.style.display = 'none';
+      currentEditingId = null;
+      renderPlanners();
+    });
+
+    // Initialize UI
+    renderPlanners();
+    showPokeballPreview();
+  }); // end DOMContentLoaded
   </script>
 </body>
 </html>
