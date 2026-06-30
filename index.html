@@ -1,110 +1,273 @@
 <!DOCTYPE html>
-<html>
- <head>
-    <link rel="stylesheet" href="imgpos.css"/>
-    <link rel="shotcut icon" href="https://cdn-icons-png.flaticon.com/512/188/188955.png" type="image/x-icon">
-    <link href="//db.onlinewebfonts.com/c/f4d1593471d222ddebd973210265762a?family=Pokemon" rel="stylesheet" type="text/css"/>
-   <title>Media PxG</title>
-	 <h1>VAL<img src="https://cdn-icons-png.flaticon.com/512/188/188955.png" width="25px" height="25px">R CALCULADO EM ULTRA BALL</h1><br>
- </head>
- <body>
-   <!-- Valor de venda da ball: <input id="ball" type="text" size="5"> <br><br/> -->
- <div>
-  Valor de venda do pokemon:
-  <input id="nota1" type="text" size="10">
- </div>
-
- <div>
-  <button onclick="media()" class="button">Calcular Média</button>
- </div>
-
-    function media(){
-      var nota1 = parseFloat(document.getElementById("nota1").value);
-	    var ball = 90;
-	    var engball = 128;
-	    var nota2 = nota1/2;
-      var media = (nota1 + nota2)/ball ;
-      var engmedia = (nota1 + nota2)/engball ;
-
-      alert("Média de uballs do pokemon é de: "+Math.round(media)+". E média de balls de engenheiro é de: "+Math.round(engmedia));
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Planejador de Evoluções PXG</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ffcc00;
+      --text:#e6eef8;
+      --muted:#9fb0c8;
+      --danger:#ff6b6b;
+      --radius:10px;
     }
-    </script>
-   <p>Pokemons fora do sistema de catch:</p>
-    <div class="sis_catch">
-   <table border="3px">
-      <tr>
-        <td><a id="name">Alolan<br>Raichu</a><br><img id="img" href="imgpos.css" src="imgs pokes\026-AlolanRaichu.png"></td>
-        <td><a id="name">Alolan<br>Muk</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\089-AlolanMuk.png"></td>
-        <td><a id="name">Hitmonlee</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\106-HitmonleeNormal.png"></td>
-        <td><a id="name">Hitmonchan</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\107-HitmonchanNormal.png"></td>
-        <td><a id="name">Chansey</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\113-Chansey.png"></td>
-        <td><a id="name">Kangaskhan</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\115-Kangaskhan.png"></td>
-        <td><a id="name">Mr.Mime</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\122-Mr.Mime.png"></td>
-        <td><a id="name">Scyther</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\123-Scyther.png"></td>
-        <td><a id="name">Eevee</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\133-Eevee.png"></td>
-        <td><a id="name">Vaporeon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\134-Vaporeon.png"></td>
-        <td><a id="name">Jolteon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\135-Jolteon.png"></td>
-        <td><a id="name">Flareon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\136-Flareon.png"></td>
-        <td><a id="name">Porygon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\137-Porygon.png"></td>
-        <td><a id="name">Sudowoodo</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\185-Sudowoodo.png"></td>
-        <td><a id="name">Espeon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\196-Espeon.png"></td>
-        <td><a id="name">Umbreon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\197-Umbreon.png"></td>
-      </tr><br>
-      <tr>
-        <td><a id="name">Slowking</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\199-Slowking.png"></td>
-        <td><a id="name">Misdreavus</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\200-Misdreavus.png"></td>
-        <td><a id="name">Unown</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\201-Unown.png"></td>
-        <td><a id="name">Wobbuffet</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\202-Wobbuffet.png"></td>
-        <td><a id="name">Scizor</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\Scizor.png"></td>
-        <td><a id="name">Porygon2</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\233-Porygon2.png"></td>
-        <td><a id="name">Smeargle</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\235-Smeargle.png"></td>
-        <td><a id="name">Tyrogue</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\236-Tyrogue.png"></td>
-        <td><a id="name">Hitmontop</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\237-HitmontopNormal.png"></td>
-        <td><a id="name">Ralts</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\280-Ralts.png"></td>
-        <td><a id="name">Kirlia</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\281-Kirlia.png"></td>
-        <td><a id="name">Gardevoir</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\282-Gardevoir.png"></td>
-        <td><a id="name">Ninjask</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\291-Ninjask.png"></td>
-        <td><a id="name">Makuhita</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\296-Makuhita.png"></td>
-        <td><a id="name">Hariyama</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\297-Hariyama.png"></td>
-        <td><a id="name">Roselia</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\315-Roselia.png"></td>
-      </tr><br>
-      <tr>
-        <td><a id="name">Torkoal</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\324-Torkoal.png"></td>
-        <td><a id="name">Castform</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\351-Castform.png"></td>
-        <td><a id="name">Tropius</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\357-Tropius.png"></td>
-        <td><a id="name">Absol</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\359-Absol.png"></td>
-        <td><a id="name">Wynaut</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\360-Wynaut.png"></td>
-        <td><a id="name">Torterra</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\389-Torterra.png"></td>
-        <td><a id="name">Infernape</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\392-Infernape.png"></td>
-        <td><a id="name">Empoleon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\395-Empoleon.png"></td>
-        <td><a id="name">Luxray</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\405-Luxray.png"></td>
-        <td><a id="name">Rampardos</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\409-Rampardos.png"></td>
-        <td><a id="name">Wormadam</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\413-Wormadam.png"></td>
-        <td><a id="name">Wormadam<br>Ground</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\413-WormadamGround.png"></td>
-        <td><a id="name">Wormadam<br>Steel</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\413-WormadamSteel.png"></td>
-        <td><a id="name">Honchkrow</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\430-Honchkrow.png"></td>
-        <td><a id="name">Garchomp</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\445-Garchomp.png"></td>
-        <td><a id="name">Snover</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\459-Snover.png"></td>
-      </tr>
-      <tr>
-        <td><a id="name">Abomasnow</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\460-Abomasnow.png"></td>
-        <td><a id="name">Weavile</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\461.png"></td>
-        <td><a id="name">Magnezone</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\462-Magnezone.png"></td>
-        <td><a id="name">Togekiss</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\468-Togekiss.png"></td>
-        <td><a id="name">Leafeon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\470-Leafeon.png"></td>
-        <td><a id="name">Glaceon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\471-Glaceon.png"></td>
-        <td><a id="name">Gallade</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\475-Gallade.png"></td>
-        <td><a id="name">Rotom</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\479-Rotom.png"></td>
-        <td><a id="name">Conkeldurr</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\534-Conkeldurr.png"></td>
-        <td><a id="name">Cofagrigus</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\563.png"></td>
-        <td><a id="name">Zorua</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\570.png"></td>
-        <td><a id="name">Klinklang</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\601.png"></td>
-        <td><a id="name">Pyroar<br>Female</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\668-Pyroar_Female.png"></td>
-        <td><a id="name">Pyroar<br>Male</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\668-PyroarMale.png"></td>
-        <td><a id="name">Gogoat</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\673.png"></td>
-        <td><a id="name">Sylveon</a><br><br><img id="img" href="imgpos.css" src="imgs pokes\700-Sylveon.png"></td>
-      </tr>
-    </table><br><br>
-   </div>
-  </body>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#071021 0%, #0b1a2b 100%);
+      color:var(--text);
+      padding:18px;
+      -webkit-font-smoothing:antialiased;
+    }
+    header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+    header img{width:36px;height:36px}
+    h1{font-size:18px;margin:0}
+    .container{max-width:980px;margin:0 auto}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      border-radius:var(--radius);
+      padding:14px;
+      box-shadow:0 6px 18px rgba(2,6,23,0.6);
+      margin-bottom:14px;
+    }
+
+    /* Form */
+    .form-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .form-row label{font-size:13px;color:var(--muted);min-width:120px}
+    .form-row input[type="text"], .form-row input[type="number"], .form-row select{
+      padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);
+      background:rgba(255,255,255,0.02);color:var(--text);min-width:160px;
+    }
+    .form-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    button{
+      background:var(--accent);color:#071021;border:none;padding:10px 14px;border-radius:8px;
+      cursor:pointer;font-weight:600;
+    }
+    button.ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.06)}
+    button.danger{background:var(--danger);color:#fff}
+
+    /* List */
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+    .search{flex:1;min-width:160px}
+    .plan-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+    .plan{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+      padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);
+    }
+    .plan h3{margin:0 0 6px 0;font-size:15px}
+    .meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+    .plan .row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* Responsive tweaks */
+    @media (max-width:600px){
+      .form-row{flex-direction:column;align-items:stretch}
+      .form-row label{min-width:0}
+      button{width:100%}
+      .controls{flex-direction:column;align-items:stretch}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="https://cdn-icons-png.flaticon.com/512/188/188955.png" alt="ball">
+      <h1>Planejador de Evoluções PXG</h1>
+    </header>
+
+    <section class="card" aria-label="Adicionar plano">
+      <div class="form-row">
+        <label for="pokeName">Nome do Pokémon</label>
+        <input id="pokeName" type="text" placeholder="Ex: Pikachu">
+        <label for="current">Estágio atual</label>
+        <input id="current" type="text" placeholder="Ex: 1">
+        <label for="target">Estágio alvo</label>
+        <input id="target" type="text" placeholder="Ex: 2">
+      </div>
+
+      <div class="form-row" style="margin-top:8px">
+        <label for="cost">Custo (itens/moedas)</label>
+        <input id="cost" type="number" min="0" placeholder="Ex: 50">
+        <label for="priority">Prioridade</label>
+        <select id="priority">
+          <option value="normal">Normal</option>
+          <option value="high">Alta</option>
+          <option value="low">Baixa</option>
+        </select>
+        <label for="note">Nota</label>
+        <input id="note" type="text" placeholder="Observações">
+      </div>
+
+      <div class="form-actions">
+        <button id="addBtn">Adicionar Plano</button>
+        <button id="clearBtn" class="ghost">Limpar Campos</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="controls">
+        <input id="search" class="search" type="text" placeholder="Buscar por nome ou nota">
+        <select id="filterPriority">
+          <option value="">Filtrar prioridade</option>
+          <option value="high">Alta</option>
+          <option value="normal">Normal</option>
+          <option value="low">Baixa</option>
+        </select>
+        <div class="small">Progresso: <span id="progress">0/0</span></div>
+      </div>
+
+      <div id="list" class="plan-list" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <script>
+    // Estrutura de dados: {id, name, current, target, cost, priority, note, done}
+    const STORAGE_KEY = 'pxg_plans_v1';
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const listEl = document.getElementById('list');
+    const searchEl = document.getElementById('search');
+    const filterPriority = document.getElementById('filterPriority');
+    const progressEl = document.getElementById('progress');
+
+    function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+    function loadPlans(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      }catch(e){ return []; }
+    }
+    function savePlans(plans){ localStorage.setItem(STORAGE_KEY, JSON.stringify(plans)); }
+
+    function getFormData(){
+      return {
+        id: uid(),
+        name: document.getElementById('pokeName').value.trim(),
+        current: document.getElementById('current').value.trim(),
+        target: document.getElementById('target').value.trim(),
+        cost: Number(document.getElementById('cost').value) || 0,
+        priority: document.getElementById('priority').value,
+        note: document.getElementById('note').value.trim(),
+        done: false
+      };
+    }
+
+    function clearForm(){
+      document.getElementById('pokeName').value='';
+      document.getElementById('current').value='';
+      document.getElementById('target').value='';
+      document.getElementById('cost').value='';
+      document.getElementById('priority').value='normal';
+      document.getElementById('note').value='';
+    }
+
+    function render(){
+      const q = searchEl.value.trim().toLowerCase();
+      const pr = filterPriority.value;
+      const plans = loadPlans().filter(p=>{
+        if(pr && p.priority !== pr) return false;
+        if(!q) return true;
+        return p.name.toLowerCase().includes(q) || (p.note && p.note.toLowerCase().includes(q));
+      });
+
+      listEl.innerHTML = '';
+      if(plans.length === 0){
+        listEl.innerHTML = '<div class="small">Nenhum plano encontrado</div>';
+      }else{
+        plans.forEach(p=>{
+          const div = document.createElement('div');
+          div.className = 'plan';
+          div.innerHTML = `
+            <h3>${escapeHtml(p.name || '(sem nome)')}</h3>
+            <div class="meta">Estágio ${escapeHtml(p.current)} → ${escapeHtml(p.target)} • Custo ${p.cost} • <strong>${p.priority}</strong></div>
+            <div class="row">
+              <div class="small">${escapeHtml(p.note || '')}</div>
+              <div style="display:flex;gap:6px">
+                <button class="ghost" data-action="toggle" data-id="${p.id}">${p.done ? 'Desfazer' : 'Concluir'}</button>
+                <button class="ghost" data-action="edit" data-id="${p.id}">Editar</button>
+                <button class="danger" data-action="delete" data-id="${p.id}">Remover</button>
+              </div>
+            </div>
+          `;
+          if(p.done){
+            div.style.opacity = '0.6';
+            div.style.textDecoration = 'line-through';
+          }
+          listEl.appendChild(div);
+        });
+      }
+      updateProgress();
+    }
+
+    function updateProgress(){
+      const plans = loadPlans();
+      const done = plans.filter(p=>p.done).length;
+      progressEl.textContent = `${done}/${plans.length}`;
+    }
+
+    // Event handlers
+    addBtn.addEventListener('click', ()=>{
+      const data = getFormData();
+      if(!data.name){
+        alert('Informe o nome do Pokémon.');
+        return;
+      }
+      const plans = loadPlans();
+      plans.push(data);
+      savePlans(plans);
+      clearForm();
+      render();
+    });
+
+    clearBtn.addEventListener('click', clearForm);
+    searchEl.addEventListener('input', render);
+    filterPriority.addEventListener('change', render);
+
+    listEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      let plans = loadPlans();
+      const idx = plans.findIndex(p=>p.id===id);
+      if(idx === -1) return;
+      if(action === 'toggle'){
+        plans[idx].done = !plans[idx].done;
+        savePlans(plans);
+        render();
+      }else if(action === 'delete'){
+        if(confirm('Remover este plano?')) {
+          plans.splice(idx,1);
+          savePlans(plans);
+          render();
+        }
+      }else if(action === 'edit'){
+        // preencher formulário para edição simples
+        const p = plans[idx];
+        document.getElementById('pokeName').value = p.name;
+        document.getElementById('current').value = p.current;
+        document.getElementById('target').value = p.target;
+        document.getElementById('cost').value = p.cost;
+        document.getElementById('priority').value = p.priority;
+        document.getElementById('note').value = p.note;
+        // remover o item antigo e esperar que o usuário clique em Adicionar para salvar como novo
+        plans.splice(idx,1);
+        savePlans(plans);
+        render();
+      }
+    });
+
+    // util
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+    }
+
+    // inicializa
+    render();
+  </script>
+</body>
 </html>
