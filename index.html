@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html>
- <head>
-    <link rel="stylesheet" href="imgpos.css"/>
-    <link rel="shotcut icon" href="https://cdn-icons-png.flaticon.com/512/188/188955.png" type="image/x-icon">
-    <link href="//db.onlinewebfonts.com/c/f4d1593471d222ddebd973210265762a?family=Pokemon" rel="stylesheet" type="text/css"/>
-   <title>Media PxG</title>
-	 <h1>VAL<img src="https://cdn-icons-png.flaticon.com/512/188/188955.png" width="25px" height="25px">R CALCULADO EM ULTRA BALL</h1><br>
- </head>
- <body>
-   <!-- Valor de venda da ball: <input id="ball" type="text" size="5"> <br><br/> -->
- <div>
-  Valor de venda do pokemon:
-  <input id="nota1" type="text" size="10">
- </div>
+<head>
+  <link rel="stylesheet" href="imgpos.css"/>
+  <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/188/188955.png" type="image/x-icon">
+  <link href="//db.onlinewebfonts.com/c/f4d1593471d222ddebd973210265762a?family=Pokemon" rel="stylesheet" type="text/css"/>
+  <title>Media PxG</title>
+</head>
+<body>
+  <h1>
+    VAL <img src="https://cdn-icons-png.flaticon.com/512/188/188955.png" width="25px" height="25px"> R CALCULADO EM ULTRA BALL
+  </h1><br>
 
- <div>
-  <button onclick="media()" class="button">Calcular Média</button>
- </div>
+  <div>
+    Valor de venda do pokemon:
+    <input id="nota1" type="text" size="10">
+  </div>
 
+  <div>
+    <button onclick="media()" class="button">Calcular Média</button>
+  </div>
+
+  <script type="text/javascript">
     function media(){
       var nota1 = parseFloat(document.getElementById("nota1").value);
-	    var ball = 90;
-	    var engball = 128;
-	    var nota2 = nota1/2;
+      var ball = 90;
+      var engball = 128;
+      var nota2 = nota1/2;
       var media = (nota1 + nota2)/ball ;
       var engmedia = (nota1 + nota2)/engball ;
 
       alert("Média de uballs do pokemon é de: "+Math.round(media)+". E média de balls de engenheiro é de: "+Math.round(engmedia));
     }
-    </script>
+  </script>
    <p>Pokemons fora do sistema de catch:</p>
     <div class="sis_catch">
    <table border="3px">
